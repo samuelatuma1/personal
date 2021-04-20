@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{% block title %}{% endblock %}</title>
+		<style>
+			body{
+				/*
+				font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+				*/
+				font-family: Arial, Helvetica, sans-serif;
+			}
+			
+					#topmenu{
+				display: flex;
+				position: relative;
+				z-index: 1;
+				flex-wrap: wrap;
+				justify-content: flex-end;
+				/*float: right;*/
+				width: 100%;
+				padding-top: 15px;
+				padding-bottom: 15px;
+				clear: both;
+				margin-bottom: 12px;
+			}
+			#topmenu div{
+				
+				padding-left: 45px;
+				font-size: 55px;
+				
+			}
+		</style>
+	</head>
+	
+	<body>
+	
+		<section id='topmenu'>
+		<div>&#x1F50D;</div>
+		<div> &#x2630; </div>
+		<a class='cartlink' href='{% url "cart" %}'> <div>&#x1f6d2;</div></a>
+		<style>
+			.cartlink{
+				text-decoration: none;
+			}
+		</style>
+	</section>
+	<br/>
+	
+	
+		{% block body %}
+		
+		{% endblock %}
+	</body>
+</html>

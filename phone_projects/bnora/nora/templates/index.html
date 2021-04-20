@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block title %} B'Nora Fashion {% endblock %}
+
+{% block body %}
+	<style>
+	#category{
+		width: 100%;
+		border-bottom: 1px solid grey;
+		padding-bottom: 8px;
+		
+		
+	}
+		.bottom-right {
+			margin-top: 7px;
+				display: flex;
+				align-items: center;
+			  padding: 10px;
+			  padding-top: 17px;
+			  padding-bottom: 17px;
+			  font-size: x-large;
+			  opacity: 0.4;
+			  min-width: 150px;
+			  color: white;
+			  text-align: center;
+			  border-radius: 3px;
+			  margin: auto;
+  			bottom: 8px;
+  			justify-content: center;
+  			right: 16px;
+  			
+  			
+			}
+	
+			#catImg{
+				max-width: 100%;
+				display: block;
+				margin: auto;
+				height: 700px;
+				max-height: 750px;
+				border-top: 1px solid grey;
+				margin-top: 10px;
+			}
+			#topmenu{
+				display: flex;
+				
+				flex-wrap: wrap;
+				justify-content: flex-end;
+				float: right;
+				width: 100%;
+			}
+			#topmenu div{
+				
+				padding-left: 45px;
+				font-size: 55px;
+				
+			}
+			#catAnchor{
+				text-decoration: none;
+				
+			}
+	</style>
+	<!--
+	<section id='topmenu'>
+		<div>&#x1F50D;</div>
+		<div> &#x2630; </div>
+		<div>&#x1f6d2;</div>
+	</section>
+	-->
+	
+	<a id='catAnchor'>
+		<div id='category'>
+			<img id='catImg'/>
+	  	  <button class="bottom-right"><p id='bottom-right'></p></button>
+		</div>
+	</a>
+	<div id='products'>
+	<style>
+		#products #productCat, .productName{
+			text-align: center;
+			font-size: 37px;
+			padding-top: 35px;
+			
+		}
+		#products .productName{
+			border-bottom: 1px solid grey;
+			padding-bottom: 10px;
+			width: 50%;
+			margin: auto;
+			text-decoration: none;
+			color: black;
+		}
+		#showProductCat{ display: none; }
+	</style>
+		<h2 id='productCat'> PRODUCTS &#x25BC; </h2>
+		<div id='showProductCat'>
+			{% for product in categories %}
+				<a href='{% url "product" product.name %}' class='productName'><p class='productName'> {{ product.name }} </p>
+				</a>
+			{% endfor %}
+		</div>
+		<script>
+			productCat = document.querySelector('#productCat')
+			productCat.onclick = () => {
+				showProductCat = document.querySelector('#showProductCat')
+				if(showProductCat.style.display == 'none'){
+					showProductCat.style.display = 'block';
+					productCat.innerText = `PRODUCTS \u25B2`
+				}
+				else if(showProductCat.style.display == 'block'){
+					showProductCat.style.display = 'none';
+					productCat.innerText = 'PRODUCTS \u25BC '
+				}
+				else{
+						showProductCat.style.display = 'block';
+					productCat.innerText = 'PRODUCTS \u25B2'
+				}
+			}
+		</script>
+	</div>
+		<style>
+			#popular{
+			text-align: center;
+			font-size: 37px;
+			padding-top: 35px;
+		</style>
+		<h2 id='popular'>MOST POPULAR</h2>
+	<div>
+		
+	</div>
+	
+	
+	<script>
+				list = []
+				{% for item in categories %}
+					list.push(['{{ item.name | escapejs }}', '{{ item.image.url | escapejs }}'])
+				{% endfor %}
+				
+				var i=0;
+				function slide(){
+				    	colors = ['pink', 'orange', 'navy', 'brown']
+  			          catImg = document.querySelector('#catImg')
+						
+						catImg.src = list[i][1]
+						catAnchor = document.querySelector('#catAnchor')
+						valuee = list[i][0]
+						catAnchor.href = `product/${valuee}`
+						showbutton = document.querySelector('.bottom-right')
+						showbutton.innerText = list[i][0]
+						
+						showbutton.style.backgroundColor = colors[i]
+						showbutton.style.border = `1px solid ${colors[i]}`
+						 
+				 		 if( i < list.length - 1){
+				    
+							    i++;
+				  		}
+				  		else{
+				   			i=0;
+				  		}
+        				setTimeout('slide()', 3000)
+					}
+				
+				document.onload = slide()
+				
+	</script>
+	
+{% endblock %}

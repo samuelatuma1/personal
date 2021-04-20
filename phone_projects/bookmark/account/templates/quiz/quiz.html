@@ -1,0 +1,200 @@
+{% extends 'account/base.html' %}
+{% block title %} Quiz for {{ subject }} {% endblock %}
+
+{% block content %}
+	
+	<div id='time'></div>	
+
+	<div id='questiondiv'>
+		<style>
+			#invisible{
+				display: None;
+			}
+		</style>
+		<div id='invisible'>{% if total == 0 %}1{% else %}{{ total }}{% endif %}</div>
+		<style>
+			.questiondata{
+				border-radius: 10px;
+        		border: 1px solid #f6f5f5;
+        		padding: 10px;
+        		background: white;
+        		margin-bottom: 15px;
+			}
+			.wrapped{
+				border: 1px solid #f6f5f5;
+				padding: 3px;
+				border-radius: 3px;
+				background-color: maroon;
+			}
+			.answerChoice{
+				border: 1px solid #f6f5f5;
+				padding: 6px;
+				border-radius: 6px;
+				margin: 7px;
+				background-color: rgb(123,171,228);
+				color: white;
+			}
+			.questiondata:nth-child(even){
+				background: #fafafa;
+			}
+			body{
+				background: #f0f8ff;
+			}
+		
+			
+		</style>
+		<br/>
+		{% for question in quiz_questions %}
+			<div class='questiondata' data-question='{{ forloop.counter }}' 
+			data-answer='{{ question.answer }}'>
+					
+				<span>Q{{ forloop.counter }}</span><br/>
+				<p>{{ question.question }}</p>
+				<div id='options'>
+					<section data-choice='A' data-at='{{ forloop.counter }}' class='answerChoice'>
+						<span class='wrapped'>A</span>
+						<span>{{ question.optionA }}
+					</section>
+					
+					<section data-choice='B' data-at='{{ forloop.counter }}' class='answerChoice'>
+						<span class='wrapped'>B</span>
+						<span>{{ question.optionB }}
+					</section>
+					
+					<section data-choice='C' data-at='{{ forloop.counter }}' class='answerChoice'>
+						<span class='wrapped'>C</span>
+						<span>{{ question.optionC }}
+					</section>
+					
+					<section data-choice='D' data-at='{{ forloop.counter }}' class='answerChoice'>
+						<span class='wrapped'>D</span>
+						<span>{{ question.optionD }}
+					</section>
+				</div>
+			</div>
+		{% endfor %}
+		
+		<div id='timealloc'>
+			{% if total == 0 %}1{% else %}{{ total }}{% endif %}
+		</div>
+		<style>
+			#timealloc{
+				display: None;
+			}
+		</style>
+		<div id='time2'></div>
+		
+		<form method='post' action='{% url "quizscore" %}' id='quizform'>
+			{% csrf_token %}
+			<input type='hidden' name='subject' value='{{ subject }}' />
+			<input type='hidden' name='scored' />
+			
+			<button id='submitquiz'>Submit Quiz</button>
+		</form>
+		<style>
+			#quizform button{
+				margin: auto;
+				margin-top: 20px;
+			}
+		</style>
+	</div>
+	
+	
+	<script>
+		scores = {}
+		// Score each choice on click
+		document.querySelectorAll('.answerChoice').forEach(choice => {
+		  choice.onclick = () => {
+		    answerchoice = choice.getAttribute('data-choice')
+		    answerfor = choice.getAttribute('data-at')
+		    
+		    // Highlight chosen
+		    document.querySelectorAll('.answerChoice').forEach(option => {
+		        if(option.getAttribute('data-at') == answerfor){
+		          option.style.backgroundColor = 'rgb(123,171,228)';
+		        }})
+		        choice.style.backgroundColor = 'navy';
+		        
+		        
+		    document.querySelectorAll('.questiondata').forEach(quest => {
+		      questionNo = quest.getAttribute('data-question')
+		      if(questionNo === answerfor){
+		       questionAnswer = quest.getAttribute('data-answer')
+		       if(questionAnswer === answerchoice){
+		         scores[answerfor] = 1;
+		       }
+		       else{
+		         scores[answerfor] = 0;
+		       }
+		      }
+		    })}})
+		    
+		    
+// Next implementing a javascript timer 
+           
+    //Get the duration and time_denotation from context
+    timeAlloc = document.querySelector('#timealloc').innerHTML
+    duration = parseInt(timeAlloc)
+    time_denotation = 'min'
+           
+    //If time is set in minutes, set time in minutes
+    if(time_denotation == 'min'){
+        time = new Date().setMinutes(new Date().getMinutes() + duration)
+                }
+    //Else if time is set in hours, set time in hours
+    else if(time_denotation == 'hour'){
+        time = new Date().setHours(new Date().getHours() + duration)
+            }
+           
+        // Call this function every second
+    x = setInterval(function(){
+        now = new Date().getTime()
+        time_left = time - now
+           
+     // Time calculations for days, hours, minutes and seconds
+                
+     var hours = Math.floor((time_left % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((time_left % (1000 * 60 * 60)) / (1000 * 60));
+                   var seconds = Math.floor((time_left % (1000 * 60)) / 1000);
+           
+    // Display the result in the element with id="time"
+    document.getElementById("time").innerHTML =`Time left: ${hours}h ${minutes}m ${seconds}s`;
+    
+    document.getElementById("time2").innerHTML =`Time left: ${hours}h ${minutes}m ${seconds}s`;
+    
+           
+    //if time left is 2 minutes or less change time color to red
+    if(time_left < (2*60*1000)){
+              document.getElementById("time").style.color = 'rgb(242, 106, 106)';
+              document.getElementById("time2").style.color = 'rgb(242, 106, 106)';
+            }
+       if(time_left < 0){
+          //Stop the interval from running
+            clearInterval(x);
+           
+            // click the submit button
+            document.getElementById("time").innerHTML = "EXPIRED";
+            document.querySelector('#submitquiz').click()
+                  }
+            }, 1000) 
+        //End of the timer function
+		    
+		    
+		    
+	// Aggregate score
+	submitbutton = document.querySelector('#submitquiz')
+	submitbutton.onclick = () => {
+	  yourscore = 0
+	  listscores = Object.values(scores)
+	  
+	  for(i=0; i < listscores.length; i++){
+	    yourscore += listscores[i]
+	  }
+     totalQuestions = document.querySelector('#invisible').innerHTML
+	  percent = Math.floor((yourscore/totalQuestions) * 100)
+	    
+	  submitscore = document.getElementsByName('scored')[0]
+	  submitscore.setAttribute('value', percent.toString())
+	}
+	</script>
+{% endblock %}

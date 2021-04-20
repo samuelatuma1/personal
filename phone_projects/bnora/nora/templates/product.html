@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %} B'Nora Fashion {% endblock %}
+
+{% block body %}
+
+<h1 id='pagetitle'>{{ products.0.category.name }}</h1>
+<style>
+	body{
+		background-color: #f0f8ff;
+	}
+	#pagetitle{
+		font-size: 40px;
+		text-align: center;
+		text-transform: uppercase;
+		padding: 25px;
+		border-bottom: 1px solid grey;
+		background-color: white;
+	}
+	.productHouse{
+		display: flex;
+		margin: 25px;
+		flex-wrap: wrap;
+		height: 350px;
+		width: 100%;
+		margin: auto;
+		margin-top: 20px;
+		margin-bottom: 25px;
+		background-color: white;
+		border: 1px solid white;
+		 border-radius: 5px;
+	}
+	.img{
+		height: 100%;
+		width: 36%;
+	}
+	.img img{
+		display: block;
+		max-width: 99%;
+		margin: auto;
+		max-height: 100%;
+	}
+	.desc{
+		
+		font-size: 30px;
+		width: 50%;
+		height: 100%;
+		padding-left: 15px;
+		
+	}
+	#producthref{
+		text-decoration: none;
+		color: black;
+	}
+	
+</style>
+
+{% for product in products %}
+<a id='producthref' href='{% url "item" product.id %}'
+<div class='productHouse'>
+	<section class='img'>
+		<img src='{{ product.image.url }}' alt='{{ product.name }}'>
+	</section>
+	
+	<section class='desc'>
+		<p>{{ product.name }}</p>
+		<p>{{ product.price }}</p>
+	</section>
+</div>
+
+	
+{% endfor %}
+
+{% endblock %}

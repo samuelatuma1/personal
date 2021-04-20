@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+
+{% block title %} B'Nora Fashion {% endblock %}
+
+{% block body %}
+{% load static %}
+<h1>{{ item.name }}</h1>
+
+
+<div id='imgDisplayed'>
+<img id='img' src='{{ item.image.url }}'/>
+
+</div>
+<style>
+#imgDisplayed{
+	height: 720px;
+	margin-top: 25px;
+	padding-top: 40px;
+	padding-bottom: 40px;
+	margin-bottom: 25px;
+}
+#img{
+	display: block;
+	max-width: 98%;
+	max-height: 700px;
+	margin: auto;
+}
+#imageHouse{
+	display: flex;
+	flex-wrap: no-wrap;
+	
+	overflow: auto;
+}
+.smallstar{
+	height: 50px;
+	width: 50px;
+	padding-left: 10px;
+}
+.use{
+	margin-left: 20px;
+	max-height: 100px;
+}
+#rates h2{
+	font-size: 40px;
+	padding-left: 10px;
+}
+#price{
+	margin-top: 40px;
+	font-size: 40px;
+}
+
+</style>
+<div id='imageHouse'>
+
+{% if item.image %}
+	<img src='{{ item.image.url }}' id='{{item.name}}' class='use' />
+{% endif %}
+
+{% if item.img1 %}
+	<img src='{{ item.img1.url }}' class='use' />
+{% endif %}
+{% if item.img2 %}
+	<img src='{{ item.img2.url }}' class='use' />
+{% endif %}
+
+{% if item.img3 %}
+	<img src='{{ item.img3.url }}' class='use' />
+{% endif %}
+</div>
+<div id='rates'>
+<h2>RATING</h2>
+<div id='rating'>
+<!--	<img src='{{ star.star.url }}' class='smallstar'/> -->		
+</div>
+</div>
+
+<section id='price'>
+	PRICE <br/>
+	&#x20A6; {{ item.price }}
+</section>
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		images = document.querySelectorAll('.use')
+		images.forEach(image => {
+			image.onclick = () => {
+				new_src = image.src 
+				img = document.querySelector('#img')
+				img.src = new_src
+			}
+		})
+		ratings = parseInt('{{ rating }}');
+		
+		function rated(){
+		
+			var img = document.createElement('img')
+			img.classList.add('smallstar')
+			img.src= '{{ star.star.url }}'
+			rating = document.querySelector('#rating')
+			rating.appendChild(img)}
+			
+			let len = 0;
+			while (len < ratings){
+			rated();
+			len++ ;
+			}
+			
+			document.querySelector('#descformbutton').onclick = () =>{
+				if(!localStorage.getItem('bnoraUserCart')){
+					qty = document.querySelector('#orderQty').value
+					size = document.querySelector('#orderSize').value
+					color = document.querySelector('#orderColor').value
+					bnoraPurchases = []
+					bnoraPurchase = {
+						productid: '{{ item.id }}',
+						qty: qty,
+						color: color,
+						size: size,
+						is_available: 'true',
+						 
+					}
+					bnoraPurchases.push(bnoraPurchase)
+					localStorage.setItem('bnoraUserCart', JSON.stringify(bnoraPurchases));
+					alert(f`${'{{item.qty}}' } ${'{{item.name}}'}s added to cart.`)
+					
+				}
+			
+				else{
+					qty = document.querySelector('#orderQty').value
+					size = document.querySelector('#orderSize').value
+					color = document.querySelector('#orderColor').value
+					bnoraPurchases = JSON.parse(localStorage.getItem('bnoraUserCart'))
+					productid = '{{ item.id }}' ;
+					let alreadyInCart = false;
+					for(var i=0; i < bnoraPurchases.length; i++){
+						if(bnoraPurchases[i].productid === productid){
+							alreadyInCart = true;
+						}
+					}
+					if(alreadyInCart){
+						alert(`${'{{ item.name }}'} already in cart`)
+						return false;
+					}
+					else{
+					
+						bnoraPurchase = {
+						productid: '{{ item.id }}',
+						qty: qty,
+						color: color,
+						size: size,
+						is_available: 'true',
+						}
+						bnoraPurchases.push(bnoraPurchase)
+					localStorage.setItem('bnoraUserCart', JSON.stringify(bnoraPurchases));
+					alert(`${qty} ${'{{item.name}}'} added to cart.`)
+						
+					}
+				}
+			}
+			/*
+			bnoraPurchases = JSON.parse(localStorage.getItem('bnoraUserCart'))
+			alert(bnoraPurchases.length)*/
+			
+	
+	})
+</script>
+
+<section id='desc'>
+<style>
+	#descform{
+		display: flex;
+		flex-wrap: wrap;
+		width: 100%;
+		justify-content: space-around;
+		margin-top: 25px;
+		font-size: 25px;
+		
+	}
+	#descform section{
+		width: 30%;
+		
+		
+	}
+	#descform button{
+		width: 80%;
+		color: white;
+		background-color: navy;
+		padding: 16px;
+		font-size: 35px;
+		border: 1px solid navy;
+		border-radius: 4px;
+		margin-top: 25px;
+	}
+	#descform select{
+		
+		min-width: 120px;
+		padding: 10px;
+		background-color: white;
+		border: 1px solid grey;
+		border-radius: 4px;
+		text-align: center;
+		height: 70px;
+		font-size: 40px;
+	}
+	input{
+		border: 1px solid grey;
+		border-radius: 8px;
+		padding: 10px;
+	}
+</style>
+	<form id='descform'>
+	{% csrf_token %}
+			
+			{% if item.color1 %}
+			<section>
+			COLOR<br/>
+			<select name='color' id='orderColor'>
+			
+					<option value='{{ item.color1 }}'>{{ item.color1 }}</option>
+				
+				{% if item.color2 %}
+					<option value='{{ item.color2 }}'>{{ item.color2 }}</option>
+				{% endif %}
+				
+				{% if item.color3 %}
+					<option value='{{ item.color3 }}'>{{ item.color3 }}</option>
+				{% endif %}
+			</select>
+		</section>
+		{% else %}
+			<select style='display: none' name='color' id='orderColor'>
+				<option value='empty'>empty</option>
+			</select>
+		{% endif %}
+		
+		{% if item.size1 %}
+		
+		<section>
+			SIZE<br/>
+			<select name='size' id='orderSize'>
+	
+					<option value='{{ item.size1 }}'>{{ item.size1 }}</option>
+				
+				
+				{% if item.size2 %}
+					<option value='{{ item.size2 }}'>{{ item.size2 }}</option>
+				{% endif %}
+				
+				{% if item.size3 %}
+					<option value='{{ item.size3 }}'>{{ item.size3 }}</option>
+				{% endif %}
+			</select>
+			</section>
+			{% else %}
+			<select style='display: none' name='size' id='orderSize'>
+				<option value='empty'>empty</option>
+			</select>
+			{% endif %}
+			<!--
+			<section>
+				QUANTITY
+				<input type='number' name='qty' />
+			</section>
+		
+-->
+		<section>
+		QUANTITY<br/>
+		<select name='qty' id='orderQty'>
+			{% if item.qty > item.max_order %}
+				
+				{% for i in max_order %}
+					<option value='{{i}}'>{{ i }}</option>
+				{% endfor %}
+			{% else %}
+				{% for j in qty %}
+					<option value='{{j}}'>{{ j }}</option>
+				{% endfor %}
+			{% endif %}
+			</select>
+			</section>
+			<button id='descformbutton'> ADD TO CART </button>
+	
+
+</form>
+
+{% endblock %}
