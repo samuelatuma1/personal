@@ -21,16 +21,17 @@
 	{% csrf_token %}
 	{{ userEdit.as_p }}
 	{{ profileEdit.as_p }}
-	
+	<input name='deliveryDate' type='hidden' />
 	<h1> DELIVERY METHOD</h1>
 	<div class='deliveryMethod'>
 		<input type='radio' id='doorDelivery' name='deliveryMethod' value='door delivery' checked>
-		<label for='doorDelivery'>Door Delivery</label><br/>
+		<label for='doorDelivery' id='deliveryDate1'>Door Delivery</label><br/>
 	</div>
+	
 	
 	<div class='deliveryMethod'>
 		<input type='radio' name='deliveryMethod' value='Pick Up' id='pickUp'>
-		<label for='pickUp'>Pick Up (Free)</label><br/><br/>
+		<label for='pickUp' id='deliveryDate2'>Pick Up (Free)</label><br/><br/>
 	</div>
 
 	<input type='hidden' name='cartItemDetails' />
@@ -252,18 +253,35 @@
 			checkout.onclick = () => {
 				//alert('tata4')
 			}
+			// Add expected time of delivery
+			deliveryDate1 = document.querySelector('#deliveryDate1')
+			date = new Date()
+			date.setDate(date.getDate() + 2)
+			deliveryDate1.innerHTML +=`<br/> Delivered on or before ${date}`
+			document.getElementsByName('deliveryDate')[0].value = `${date}`
+			deliveryDate2 = document.querySelector('#deliveryDate2')
+			date2 = new Date()
+			
+			date2.setDate(date.getDate() + 1)
+			deliveryDate2.innerHTML +=`<br/> Delivered on or before ${date}`
+
+
+
 			document.querySelector('form').appendChild(a)
 			button = document.createElement('button')
 			button.classList.add('subtotal')
 			button.style.width = '99%'
 			button.innerHTML = 'PROCEED TO NEXT'
 			document.querySelector('form').append(button)
+			
+			
 
 			deliveryForm = document.querySelector('#deliveryForm')
 			deliveryForm.onsubmit = () => {
 				
 				cartItemDetails = document.getElementsByName('cartItemDetails')[0]
 				cartItemDetails.value = localStorage.getItem('bnoraUserCart')
+				localStorage.setItem('bnoraUserCart', '[]')
 					
 			}
 			}

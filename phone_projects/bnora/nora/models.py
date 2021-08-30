@@ -28,6 +28,8 @@ class Product(models.Model):
 	color2 = models.CharField(max_length=30, blank=True)
 	color3 = models.CharField(max_length=30, blank=True)
 	
+	available_for_delivery_after = models.IntegerField(default=2)
+ 
 	size1 = models.CharField(max_length=30, blank=True)
 	size2 = models.CharField(max_length=30, blank=True)
 	size3 = models.CharField(max_length=30, blank=True)
@@ -50,6 +52,21 @@ class UserProfile(models.Model):
 	address = models.TextField(blank=True, null=True)
 	phone = models.IntegerField(blank=True, null=True)
 	
- 
-class Counter(request):
+import datetime
+class Desk(models.Model):
+    name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                             related_name='counter')
+    deliveryMethod = models.CharField(max_length=100)
+    deliveryAddress = models.CharField(max_length=100, default='unknown')
+    cartItemDetails = models.CharField(max_length=10000)
+    paymentMethod = models.CharField(max_length=100)
+    transaction_id = models.CharField(max_length=110)
+    deliveryDate= models.DateTimeField(default=datetime.datetime.now() + datetime.timedelta(days=2))
+    phone = models.CharField(max_length=20, default='client_number')
+    order_stage = models.CharField(max_length=50, choices=[('Order placed', 'Order Placed'), ('Processing', 'In transit'), ('Delivered', 'Delivered')], default='Order placed')
+    order_placed = models.BooleanField(default=False)
+    def __str__(self):
+        return f'{self.name}, {self.phone}'
     
+    class Meta:
+        ordering = ['-deliveryDate']

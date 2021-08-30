@@ -116,6 +116,7 @@
 						color: color,
 						size: size,
 						is_available: 'true',
+						//deliver: '{{ available_for_delivery_after }}'
 						 
 					}
 					bnoraPurchases.push(bnoraPurchase)
@@ -148,6 +149,7 @@
 						color: color,
 						size: size,
 						is_available: 'true',
+						//deliver: '{{ available_for_delivery_after }}'
 						}
 						bnoraPurchases.push(bnoraPurchase)
 					localStorage.setItem('bnoraUserCart', JSON.stringify(bnoraPurchases));

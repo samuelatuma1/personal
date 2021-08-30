@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from .models import Categories, Product, Star, UserProfile
+from .models import Categories, Product, Star, UserProfile, Desk
 # Create your views
 def index(request):
 	
@@ -160,7 +160,10 @@ def address(request):
 		'profileEdit' : profileEditForm
 	})
  
-
+import random
+import datetime
+from datetime import timedelta
+@login_required
 def payment(request):
     if request.method == 'POST':
         userEditForm = UserEdit(instance=request.user, data=request.POST)
@@ -169,13 +172,99 @@ def payment(request):
         if userEditForm.is_valid() and profileEditForm.is_valid():
             userEditForm.save()
             profileEditForm.save()
+            
             deliveryMethod = request.POST['deliveryMethod']
             cartItemDetails = eval(request.POST['cartItemDetails'])
+            paymentMethod = request.POST['paymentMethod']
+            transaction_id = str(request.user) + str(random.randrange(100000000000, 999999999999))
+            deliveryAddress = request.POST['address']
+            phone = request.POST['phone']
+            deliveryDate = datetime.datetime.now() + timedelta(days=2)
+            
+            purchase = Desk(name=request.user, deliveryMethod=deliveryMethod,
+                          cartItemDetails=cartItemDetails, transaction_id=transaction_id,
+            	          deliveryDate=deliveryDate, phone=phone, deliveryAddress=deliveryAddress, paymentMethod=paymentMethod)
+            purchase.save()
+            recent_purchase = Desk.objects.filter(name=request.user).order_by('-deliveryDate').first()
+            products_purchased = eval(recent_purchase.cartItemDetails)
+            index = 0
+            total_cost = 0
+            product_purchase = []
+            for product in products_purchased:
+                productid = int(product['productid'])
+                product = Product.objects.filter(pk=productid).first()
+                color = products_purchased[index]['color']
+                if color == 'empty':
+                    color = ''
+                else:
+                    color = color
+                
+                size = products_purchased[index]['size']
+                if size == 'empty':
+                    size = ''
+                else:
+                    size = size
+                
+                
+                
+                about_prod = {
+					'name': product.name,
+					'price': product.price,
+					'qty': products_purchased[index]['qty'],
+					'color': color,
+					'size': size
+				}
+                total_cost += (int(products_purchased[index]['qty']) * int(product.price))
+                product_purchase.append(about_prod)
+                index += 1
+                          
+            return render(request, 'order_summary.html', {'recent_purchase' : recent_purchase,
+                                                      'product_purchases': product_purchase, 'total_cost': total_cost})
 
-        return HttpResponse(f'{cartItemDetails[0]["color"]}')
-	
-		
         
-    return HttpResponse('Hello world') 
-	
+from django.core.mail import send_mail        
+@login_required  
+def order_placed(request):
+    recent_purchase = Desk.objects.filter(name=request.user).order_by('-deliveryDate').first()
+    recent_purchase.order_placed = True
+    recent_purchase.save()
+    
+    #total cost, reduce quantity available to reflect purchase
+    products_purchased = eval(recent_purchase.cartItemDetails)
+    total_cost = 0
+    index = 0
+    for product in products_purchased:
+        productid = int(product['productid'])
+        product = Product.objects.filter(pk=productid).first()
+        product.qty -= int(products_purchased[index]['qty'])
+        product.save()
+        total_cost += (int(products_purchased[index]['qty']) * int(product.price))
+        index += 1
+
+    # Delete all unplaced orders
+    
+    Desk.objects.filter(name=request.user).filter(order_placed=False).order_by('-deliveryDate').all().delete()
+    send_mail(f"Your B'nora Order {recent_purchase.transaction_id} has been confirmed",
+           f"Dear {recent_purchase.name.username}, \n Thank you for shopping on B'nora.\
+           Your order {recent_purchase.transaction_id} has successfully been confirmed\n. \
+        	it will be packaged and shipped to you as soon as possible.\
+            Thank you for shopping with B'nora {[(Product.objects.get(pk=product['productid']).name, Product.objects.get(pk=product['productid']).price, product['qty']+' unit',  ' size: '+ product['size'], ' color: '+ product['color']) for product in eval(recent_purchase.cartItemDetails)]},'Total Cost: '+ {total_cost}",
+           'atumasaake@gmail.com', [f'{recent_purchase.name.email}'])
+    
+    #send mail to admin
+    title = f"{recent_purchase.name.username}'s order is pending approval "
+    
+    message = f"{[(Product.objects.get(pk=product['productid']).name, Product.objects.get(pk=product['productid']).price, product['qty']+' unit','color: ' + product['size'], ' color: '+ product['color']) for product in eval(recent_purchase.cartItemDetails)]}, Total: ${total_cost}"
+    
+    send_mail(title, message, 'atumasaake@gmail.com', ['atumasaake@gmail.com'])
+    return render(request, 'order_placed.html', {'recent_purchase' : recent_purchase,})
+
+@login_required
+def track_orders(request):
+    order_placed = Desk.objects.filter(name=request.user).filter(order_stage='Order placed').order_by('-deliveryDate').all()  
+    processing = Desk.objects.filter(name=request.user).filter(order_stage='Processing').order_by('-deliveryDate').all()
+    delivered =  Desk.objects.filter(name=request.user).filter(order_stage='Delivered').order_by('-deliveryDate').all()
+    
+    return render(request, 'track_orders.html', {'order_placed': order_placed, 'processing': processing, 'delivered': delivered})
+
 	
