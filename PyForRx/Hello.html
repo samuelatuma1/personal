@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // generate a nnumber btw 0 - 9
+        const rand = Math.floor(Math.random()*10)
+    
+        // alllow user to input 
+        guess = prompt('Guess a num from 0 to 10')
+        trial = 1
+
+        // while user still has trial or user is wrong
+        while(trial < 3){
+            // if user guesses correctly
+            if(guess == rand){
+                alert('correct')
+            }
+            // else
+            else{
+                // increase trial
+                trial++
+                // give the user one more try
+                guess = prompt('guess a num from 0 to 10')
+            }
+        }
+    </script>
+</body>
+</html>
