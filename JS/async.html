@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // function sayHello(){
+        //     consolelog("Hello")
+        // }
+        // setTimeout(sayHello, 0 )
+        // console.log("second")
+        // function count(num){
+            
+        //     while(num > 0){
+        //         num --
+        //     }
+        //     console.log("counted")
+        // }
+        // setTimeout(count, 0, 800000000)
+        // console.log("done")
+        function logHello(){
+            console.log("Hello")
+        }
+        // x = setInterval(logHello, 1000)
+        // setTimeout(clearInterval, 5000, x)
+       const colorMe = new Promise((accept, reject) => {
+           const colors = ["red", "orange", "yellow",  "green", "indigo", "violet"]
+           const idx = Math.flooor(Math.random() * colors.length)
+           const color = colors[idx]
+           const error = false
+           if(!error){
+               accept(color)
+           }
+           else{
+               reject("An error will never occur")
+           }
+        })
+        colorMe.then(col => {
+            document.body.style.backgroundColor = col
+        })
+        fetch("https://api.github.com/users/samuelatuma1").then(data => data.json())
+.then(data => {
+    let img_src = data["avatar_url"]
+    let img = document.createElement("img")
+    img.src = img_src
+    document.body.append(img)
+})    
+</script>
+</body>
+</html>

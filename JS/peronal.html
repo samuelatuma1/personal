@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // this in JavaScript
+        var hello = 'Hello to you I am on the window'
+        var hi = 'THi from a window'
+        function sayHello(){
+            let hello = 'How are you'
+            alert(this.hello)
+        }
+
+        let obj = {
+            hello : 'How are you I am in an object',
+            hi : 'This is hi from an an object'
+        }
+        
+        // sayHello()
+
+        const sayHi = () => {
+            let hi = 'Hi from the function itself'
+            alert(this.hi)
+        }
+        // sayHi()
+        // sayHello.call(obj)
+        // sayHi.call(obj)
+
+        // project -> Majority
+        // allow users vote.
+
+        const all_votes = {}
+        function allow_vote(){
+            let username = prompt('Your ID')
+
+            while(username.length > 0){
+                if(all_votes.hasOwnProperty(username)){
+                    alert(`${username} alrready voted. Please kick him out`)
+                }
+                else{
+                    let vote = prompt('Who do you want to vote for APC, PDP, ANPC, LP')
+                    all_votes[username] = vote
+                }
+                username = prompt('Your ID')
+            }
+
+            return all_votes
+        }
+
+        // console.log(allow_vote())
+
+        // Count votes
+        let votes = {}
+        function count_votes(){
+            for (let voter in all_votes){
+                let party = all_votes[voter]
+                if(!votes.hasOwnProperty(party)){
+                    votes[party] = 1
+                }
+                else{
+                    votes[party] += 1
+                }
+            }
+            return votes
+        }
+        console.log(count_votes())
+
+
+
+        // majority votes
+        function majority_vote(){
+            let majority = null
+            let majority_count = 0
+
+            for (let party in votes){
+                let party_votes = votes[party]
+                if (party_votes > majority_count){
+                    majority = party
+
+                    majority_count = votes[party]
+            
+                }
+            }
+
+            return majority
+        }
+        console.log('The winner of the election is => ', majority_vote())
+
+        // Treating Functions as first class Citizens
+        let names = ['Sam', 'Mitchel', 'Sandra']
+        function greetPerson(name){
+            alert(`Hello ${name}`)
+        }
+        let greet = greetPerson
+        // console.log(greet('Peter'))
+
+    let vehicle={
+        car: ['bentley', 'porsche', 'toyota'],
+        heavy_duty: ['mack', 'caterpillar'],
+        actions : () => {return 'all vehicles can move'}
+    }
+    // alert(vehicle['actions']())
+
+    // function printall(names){
+    //     for(let name of names){
+    //         console.log(`Hello ${name}`)
+    //     }
+    // }
+
+    
+    function greetall(names){
+        for(let name of names){
+            console.log(`Hello ${name}`)
+        }
+    }
+    names = ['sam', 'vic', 'josh']
+    nums = [1, 2, 3]
+    greetall(nums)
+
+    // Higher Order functions
+    function callAnother(func, arg){
+        return func(arg)
+    }
+
+    function genRandom(num){
+        return Math.floor(Math.random() * num)
+    }
+    function sqr(num){
+        return Math.sqrt(num)
+    }
+    // console.log(callAnother(sqr, 27))
+
+    // num = 6
+
+    // function mult_num(x){
+    //     return x * num
+    // }
+    function multiply(num1, num2){
+        return num1 * num2
+    }
+
+
+    function find_square(num){
+        return multiply(num, num)
+    }
+    function make_even(num){
+        function check_even(){
+            return num % 2 == 0
+        }
+
+        if (check_even()){
+            return num
+        }
+        else{
+            return num * 2
+        }
+
+    }
+    console.log(make_even(10))
+
+    // console.log(find_square(8))
+    function fact(num){
+        return num == 1 ? 1 : num * fact(num - 1)
+    }
+    // console.log(fact(21))
+    comps = 0
+    function fibonacci(index){
+        if (index <= 2){
+            comps++
+            return 1
+        }
+        else{
+            comps++
+            return fibonacci(index - 1) + fibonacci(index - 2)
+        }
+    }
+    // console.log(fibonacci(45))
+    console.log('totaal', comps)
+
+
+
+    // Dynamic Programming : -> Break problems into smaller chunks, keep solved chunks in memory to prevent recomputation
+    let memory = {}
+    function fib_mod(index){
+        if(memory.hasOwnProperty(index)){
+            return memory[index]
+        }
+
+        if(index <= 2){
+            return 1
+        }
+        else{
+            let solve = fib_mod(index - 1) + fib_mod(index - 2)
+            memory[index] = solve
+            return solve
+        }
+    }
+
+    console.log(fib_mod(20))
+
+
+    
+
+
+
+        // Project -> Optimization Problem
+
+    </script>
+</body>
+</html>

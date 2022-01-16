@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // for loop
+
+        // users = ['user1', 'user2', 'user3']
+    
+        // // avatar = prompt('input avatar')
+        // // for (user of users){
+        // //     if(avatar == user){
+        // //         alert(`Welcome ${avatar}`)
+        // //     }
+        // // }
+
+        // // while loop
+        // let num = 10
+        // while(num > 0){
+        //     if(num % 2 == 0){
+        //         console.log(`${num} is even`)
+        //     }
+        //     else{
+        //         console.log(`${num} is odd`)
+        //     }
+        //     num -= 1
+        // }
+        
+
+        
+        // // non primitive data types (More like structures)
+
+        // // -> Arrays 
+        // let arr = [1, 2, 3, 4]
+        // // accessing items in an array
+        // // Adding data to our array
+        // arr.splice(1, 0, 'nes')
+
+        // // Modifying existing data
+        // arr[2] = 'now modified'
+        // console.log(arr)
+        // for (let x of arr){
+        //     console.log(x)
+        // }
+
+        // // Remove data using the splice method#
+        // // -> Objects
+
+        // let about = {'name': "samuel", 'age': 12, friends:['Andikan', 'Aniekan']}
+        // console.log(about['name'])
+        // console.log(about.name)
+
+        // // Adding data to an object
+        // about['skill'] = "Piano"
+        // console.log(about)
+
+        // // Modifying data in an object
+        // about.name = 'John'
+
+        // about.age += 1
+        // console.log(about)
+        // // Deleting data from the object
+        // delete about['age']
+        // hasName = about.hasOwnProperty("name")
+        // console.log(hasName)
+
+        // // Looking through about
+        // for(let key in about){
+        //     console.log(key, '=> ', about[key])
+        // }
+        let set = new Set([1, 2, 3, 4, 5])
+        let setb = new Set([1, 3, 5, 7, 9])
+
+        // access data 
+        console.log(set.has(5))
+
+        // add data
+            set.add(6)
+        // modify data
+
+        // remove data
+        set.delete(6)
+
+        
+        // union
+        function union(set, set2){
+            const setc = new Set()
+            for(let item of set){
+                setc.add(item)
+            }
+            for(let item of set2){
+                setc.add(item)
+            }
+
+            return setc
+        }
+
+        // intersect
+        function intersect(set, set2){
+            let seti = new Set()
+            for(let item of set){
+                if(set2.has(item)){
+                    seti.add(item)
+                }
+            }
+            return seti
+        }
+
+        // universal
+        function universal(parent, child){
+            let contains = true
+            for(let item of child){
+                if (!parent.has(item)){
+                    contains = false
+                }
+            }
+            return contains
+        }
+
+        console.log(union(set, setb))
+        console.log(intersect(set, setb))
+        const uni = new Set([0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+        console.log(universal(uni, setb))
+        console.log(set)
+
+        const list = [1, 2, 3, 4, 5]
+
+        function modlist(L){
+            L[0] *= 10
+        }
+       function add(a, b){
+           const  sumdata = a + b
+           return sumdata
+       }
+
+    //    alert(add(2, 3) * 10)
+        //modlist(list)
+        console.log(list)
+        
+
+        // // Scope
+        // const print = console.log
+        // let nums = 20
+        // function changeNums(){
+        //     let nums = 35
+        //     return nums
+
+        // }
+        // changeNums()
+        // console.log(nums)
+        
+        function multiply(aa, b){
+            console.log(aa * b)
+            return aa * b
+        }
+        multiply(2, 4)
+        
+        // console.log(number)
+        // let number = 81
+        const voters = {}
+        function vote(){
+            let name = prompt("Unique Identifier")
+            let party = prompt("Who are you voting for?")
+            if(voters.hasOwnProperty(name)){
+                alert(`Kick ${name} out`)
+                return 
+
+            }
+            if(name.length > 1 && party.length > 1){
+                voters[name] = party
+            }
+        }
+        let voter_available = 3
+
+        
+        while (voter_available > 0){
+            vote()
+            voter_available--
+        }
+        console.log(voters)
+        majority_votes  = {}
+        function count_votes(){
+            for(voter in voters){
+                let vote = voters[voter]
+                if(!majority_votes.hasOwnProperty(vote)){
+                    majority_votes[vote] = 1
+                }
+                else{
+                    majority_votes[vote] += 1
+                }
+            }
+        }
+
+        
+        count_votes()
+        console.log(majority_votes)
+        function winner(){
+            let winning_party = null
+            winning_vote = 0
+            for(party in majority_votes){
+                if(majority_votes[party] > winning_vote){
+                    winning_party = party
+                    winning_vote = majority_votes[party]
+
+                }
+            }
+            return `Winner of the tight race is ${winning_party} with ${winning_vote} votes`
+            // return [winning_party, winning_vote]
+        }
+
+        console.log(winner())
+        
+
+
+
+        
+
+
+        
+        
+
+    </script>
+
+    <style>
+        body{
+            background-color: black;
+            color: antiquewhite;
+            font-family: cursive;
+        }
+    </style>
+    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Omnis temporibus placeat incidunt inventore quae voluptas corrupti qui reiciendis suscipit laudantium!
+    
+</body>
+</html>

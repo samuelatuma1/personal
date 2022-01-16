@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        
+    </style>
+</head>
+<body>
+    <form>
+        <input type="text" id="name">
+        <input type="number" id="age" >
+        <button>Submit</button>
+    </form>
+    <button>Hello</button>
+    <button>Hello</button>
+    <button>Hello</button>
+    <script>
+        //events
+        // -> preventing default behaviour
+        const form = document.querySelector("form")
+        form.onsubmit = showDetails
+
+        function showDetails(e){
+            // Prevent Default prevents default behaviourof any ele
+            e.preventDefault()
+            let names = document.querySelector("#name")
+            let nameval = names.value
+
+            let age = document.querySelector("#age")
+            let ageval = age.value
+
+            // create div
+            let div = document.createElement("div")
+            div.className = "details"
+            div.innerText = `Hello ${nameval}, you are ${ageva}`
+            form.append(div)
+        }
+
+        // -> Event Propagation
+        let btns = document.querySelectorAll("button")
+        btns.forEach(btn => {
+            btn.onclick =  sayS
+        })
+        function sayS(e){
+                let clicked = e.target
+                alert(clicked.innerHTML)
+                e.stopPropagation() // stops events from propagating (rippling)
+            }
+        let btn = document.createElement("button")
+        btn.innerHTML = "added via JS"
+        document.body.append(btn)
+       
+        // causing event to occur on multiple elements(including js created)  using event propagation
+         
+
+        // -> Local Storage
+
+        // -> Predicting Property price
+    
+    </script>
+</body>
+</html>

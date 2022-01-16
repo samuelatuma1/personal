@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id='res'>
+
+    </div>
+    <div id='show'>
+        
+    </div>
+    <br>
+        <button>Solve</button>
+    <script>
+        document.body.onkeydown = (e) => {
+            let permitted = '1234567890+-*/'
+            let pressed = e.key       
+            if(permitted.indexOf(pressed) != -1){
+                let show = document.querySelector("#show")
+                show.innerHTML += pressed
+
+            }
+            if(e.key == 'c'){
+                let show = document.querySelector("#show")
+                let quest = show.innerHTML
+                let remove = quest.slice(0, quest.length - 1)
+                show.innerHTML = remove
+            }
+        }
+
+        let btn = document.querySelector("button")
+         btn.onclick = e => {
+            let quest = document.querySelector("#show").innerHTML
+            let answer = eval(quest)
+            let res = document.querySelector("#res")
+            res.innerText = answer
+         }
+    
+    </script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+</head>
+<body>
+   <script>
+       // Treating functions as first class citizens
+       // functional programming
+       // array, object, set
+    //    let arr = [1, 2, 3]
+    function addNum(a,b){
+        return a + b
+    }
+    x = addNum
+    // console.log(x(2, 11))
+
+    // let arr = [
+    //     1, 2, [2, 3]
+    // ]
+    let arr = [
+        1,
+        2, 
+        () => {alert('Hello world')},
+        
+    ]
+    // alert(arr[3](7))
+ 
+    // function printAll(arr){
+    //     return arr
+    // }
+    // // alert(printAll([2, 1, 4, 5]))
+    // function callAnother(funct){
+    //     return funct()
+    // }
+    
+    // function greet(){
+    //     return 'Hello world'
+    // }
+    // alert(callAnother(greet))
+    function callAnother(func, arg){
+        return func(arg)
+    }
+    function find_sqrt (num){
+        return Math.sqrt(num)
+    }
+    // alert(callAnother(find_sqrt, 21))
+
+   function multiply(a, b){
+       return a * b
+   }
+   function find_sqr(num){
+       return multiply(num, num)
+   }
+//    alert(find_sqr(4))
+   function make_even(num){
+       function is_even(){
+           return num % 2 == 0
+       }
+
+       if (is_even()){
+           alert(num)
+       }
+       else{
+           alert(num * 2)
+       }
+   }
+   function max(...args){
+    let maximum = -1/ 0
+    for (let number of args){
+        if (number > maximum){
+            maximum = number
+        }
+    }
+    return maximum
+}
+//    make_even(1112)
+const investments2 = [
+    {name: 'software', 'cost': 20000, profit: 280000},
+    {name: 'cosmetics', 'cost': 140000, profit: 192000},
+    {name: 'furniture', 'cost': 126000, profit: 184000},
+    {name: 'perfumes', 'cost': 81000, profit: 102000},
+    {name: 'studio', 'cost': 73000, profit: 96000},
+    {name: 'auto sseller', 'cost': 91000, profit: 111000}
+    
+]
+function find_best_ratio(arr1, arr2){
+    let arr1_cost = 0
+    let arr1_profit = 0
+    for(let business of arr1){
+        arr1_cost += business['cost']
+        arr1_profit += business['profit']
+    }
+
+    let arr2_cost = 0
+    let arr2_profit = 0
+    for(let business of arr1){
+        arr2_cost += business['cost']
+        arr2_profit += business['profit']
+    }
+
+    return arr1_profit / arr1_cost > arr1_profit / arr2_cost ? arr1 : arr2
+
+}
+
+
+
+const investments = [
+    {name: 'cement factory', 'cost': 200000, profit: 280000},
+    {name: 'cosmetics', 'cost': 140000, profit: 192000},
+    {name: 'furniture', 'cost': 126000, profit: 184000},
+    {name: 'perfumes', 'cost': 81000, profit: 102000},
+    {name: 'studio', 'cost': 73000, profit: 96000},
+    {name: 'auto sseller', 'cost': 91000, profit: 111000}
+    
+]
+
+function find_best(arr1, arr2){
+    let arr1_cost = 0
+    let arr1_profit = 0
+    for(let business of arr1){
+        arr1_cost += business['cost']
+        arr1_profit += business['profit']
+    }
+
+    let arr2_cost = 0
+    let arr2_profit = 0
+    for(let business of arr2){
+        arr2_cost += business['cost']
+        arr2_profit += business['profit']
+    }
+
+    return arr1_profit - arr1_cost > arr2_profit - arr2_cost ? arr1 : arr2
+
+}
+// alert(max(1, 2, 4, 9, 5))
+console.log(find_best(investments, investments2))
+let memo = {}
+function dp(investments, available, idx = 0, choices = []){
+    if (memo.hasOwnProperty(idx)){
+        
+        
+        return memo[idx]
+    }
+    const curr_bus = investments[idx]
+    if (idx >= investments.length || available <= 0){
+        return choices
+    }
+    
+    else if(curr_bus.cost > available){
+        return dp(investments, available, idx + 1, choices)
+    }
+    else{
+        const inv_choices = choices.slice(0, choices.length)
+        inv_choices.push(curr_bus)
+        const make_inv = dp(investments, available - curr_bus.cost, idx + 1, inv_choices)
+
+        const dont_inv = dp(investments, available, idx+1, choices)
+        
+        const best =  find_best(make_inv, dont_inv)
+        // debugger;
+        memo[idx]  = best
+        return best
+
+    }
+
+}
+
+console.log(dp(investments, 480000))
+
+
+const matrix = {
+    'a': ['b', 'c'],
+    'b' : ['d', 'e'],
+    'c' : ['d', 'f'],
+    'd': [],
+    f: [],
+    'e' : ['f'],
+    'r' : ['f']
+}
+function recursive_dfs(matrix, search, end){
+    if(search === end) return true;
+    for(let neigbhor of matrix[search]){
+        if(recursive_dfs(matrix, neigbhor, end)) return true;
+    }
+    return false
+}
+
+
+console.log(recursive_dfs(matrix, 'r', 'f'))
+
+   </script>
+</body>
+</html>
