@@ -1,0 +1,87 @@
+{% extends 'connect/base.html' %}
+
+
+{% block section %}
+<style>
+    .container{
+        margin: 20px;
+    }
+    #found{
+        display: flex;
+        padding: 10px;
+        box-shadow: 0px 1px 20px 0px rgb(230, 230, 230);
+        border-radius: 20px;;
+    }
+    #img{
+        width: 350px;
+    }
+    #img img{
+        display: block;
+        margin: auto;
+        width: 345px;
+        height: 345px;
+        object-fit: cover;
+        border-radius: 20px;
+    }
+    @media screen and (max-width: 800px){
+        #found{
+            display: block;
+        }
+    }
+    aside{
+        padding: 10px;
+    }
+    #found a{
+            /* display: block; */
+            padding: 12px;
+            text-decoration: none;
+            background-color: white;
+            color: teal;
+            /* border: 1px solid maroon; */
+            border-radius: 2px;
+            box-shadow: 0px 1px 8px 0px teal;;
+
+
+        }
+</style>
+
+
+<div class='container'>
+    <form method='POST'>
+        {% csrf_token %}
+        {{form.as_p}}
+        
+        <button>Search Skill</button>
+    </form>
+
+    {% if search == 'None' %}
+        <h1>Search Result</h1>
+        None Found
+    {% elif search %}
+    <h1>Here is your closest Connection to the skill : {{ skill }}</h1>
+        <div id='found'>
+            
+            <div id='img'>
+                {% if search.profile.profile_img %}
+                    <img src='{{search.profile.profile_img.url }}'>
+                {% endif %}
+            </div>
+                <aside>
+                    <p>
+                        Name: {{search.username.upper}}
+                    </p>
+                    <p>
+                        Status: {{ search.profile.status }}
+                    </p>
+                    <p>
+                        Skill : {{ search.profile.skill }}
+                    </p>
+                    <a href='{% url "add_friend" search.id %}'>Add To FriendList</a>
+                </aside>
+            
+
+
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

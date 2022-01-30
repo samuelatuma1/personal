@@ -1,0 +1,100 @@
+{% extends "connect/base.html" %}
+
+
+{% block section %}
+    <style>
+        .search{
+            padding: 10px;
+            
+            
+        }
+        .user{
+            display: flex;
+            margin: 25px;
+            border: 1px solid rgb(255, 255, 255);
+            padding: 20px;
+            border-radius: 40px;
+            box-shadow: 0px 1px 18px 0px rgb(228, 225, 225);
+        }
+        h2{
+            margin: 25px;
+            
+        }
+        
+        .user .img{
+            display: block;
+            width: 320px;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: grey;;
+            align-items: center;
+        }
+        .img img{
+            display: block;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .user aside{
+            padding: 30px;
+        }
+        @media screen and (max-width: 800px){
+            .user{
+                display: block;
+            }
+            .user aside{
+                width: 95%;
+            }
+        }
+        .user a{
+            /* display: block; */
+            padding: 12px;
+            text-decoration: none;
+            background-color: white;
+            color: teal;
+            /* border: 1px solid maroon; */
+            border-radius: 2px;
+            box-shadow: 0px 1px 8px 0px teal;;
+
+
+        }
+    </style>
+    <div class='search'>
+
+        <form method='post'>
+            {% csrf_token %}
+            {{ form }}
+            <br>
+            <button>Search Friend</button>
+
+        </form>
+
+        {% if results %}
+            <h2>Search Results</h2>
+            {% for res in results %}
+                <div class='user'>
+                    <div class='img'>
+                        {% if res.profile.profile_img %}
+                            <img src='{{res.profile.profile_img.url}}'>
+                        {% endif %}
+                    </div>
+                    <aside>
+                        <p>Name: {{ res.username }}</p>
+                        <p>Status: {{ res.profile.status }}</p>
+                        <p>Skill: {{ res.profile.skill }}</p>
+                        
+                            <a href='{% url "add_friend" res.id %}'>Add Friend</a>
+                        
+                    </aside>
+                </div>
+
+            {% empty %}
+                
+            {% endfor %}
+        {% endif %}
+        
+    </div>
+{% endblock %}
