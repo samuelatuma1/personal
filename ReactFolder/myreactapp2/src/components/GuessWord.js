@@ -17,7 +17,6 @@ function hiddenWord(){
 
 
 function compare(guess, randWord){
-    console.log(guess, randWord)
     const coloring = new Array(guess.length).fill("B")
     //  count occurence of each character in randWord
     const charCount = {}
@@ -52,8 +51,7 @@ function compare(guess, randWord){
             }
         }
     }
-    console.log(charCount)
-    console.log(coloring)
+    
     return coloring
 }
 
@@ -91,7 +89,6 @@ export default function GuessWord(props){
                 newGuess[e.target.id] = keyVal
                 return newGuess
             })
-            console.log(guess)
             e.target.nextElementSibling.focus()
         }
     }
